@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: tantera
+    runtime: node
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/auth/me
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_SSL
+        value: "true"
+      - key: TANTERA_ADMIN_NAME
+        sync: false
+      - key: TANTERA_ADMIN_EMAIL
+        sync: false
+      - key: TANTERA_ADMIN_PASSWORD
+        sync: false
+      - key: MIGRATE_LOCAL_DB
+        value: "true"
