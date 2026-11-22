@@ -193,3 +193,5 @@ const areaViewWithContent=areaView;areaView=async function(area){await Promise.r
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-public-content-delete]');if(!b)return;if(!confirm('Apagar este projeto?'))return;try{await api('/api/team/public-content/'+b.dataset.publicContentDelete,{method:'DELETE'});await renderTeam();notify('Projeto apagado.')}catch(err){notify(err.message)}});
 const loadPublicContentAfterStudent=loadPublicContent;loadPublicContent=async function(){await loadPublicContentAfterStudent();if(!inTeam())renderApprovedContent()};loadPublicContent();
 const renderApprovedContentClean=renderApprovedContent;renderApprovedContent=function(){document.querySelector('#avisos')?.remove();renderApprovedContentClean()};loadPublicContent();
+const studentWithoutTeamProjects=student;student=function(){studentWithoutTeamProjects();if(!inTeam()){document.querySelector('#atualizacoes')?.remove();document.querySelector('#avisos')?.remove()}};if(!inTeam())student();
+renderApprovedContent=function(){document.querySelector('#atualizacoes')?.remove();document.querySelector('#avisos')?.remove()};
