@@ -1,15 +1,37 @@
 "use strict";
 
 const referenceHome=()=>location.hash===""||location.hash==="#inicio";
+const referenceAreas={"#shop":"shop","#ingressos":"ingressos","#associados":"associados","#calendario":"calendario","#contato":"contato"};
+const referenceArea=()=>referenceAreas[location.hash]||null;
+function clearReferenceAreaState(app){
+  app.classList.remove('reference-area-shell');
+  app.querySelectorAll(':scope > *').forEach(node=>{node.hidden=false;node.classList.remove('reference-area-route');node.querySelector('.reference-back-home')?.remove()});
+}
 function syncReferenceHome(){
   const app=document.querySelector('#app'),hero=document.querySelector('#inicio');
-  if(!app||!hero){document.querySelector('header')?.removeAttribute('hidden');document.querySelector('footer')?.removeAttribute('hidden');return;}
-  if(!referenceHome()){
-    app.querySelectorAll(':scope > *').forEach(node=>node.hidden=false);
+  if(!app||!hero||inTeam()){
+    if(app)clearReferenceAreaState(app);
     document.querySelector('header')?.removeAttribute('hidden');
     document.querySelector('footer')?.removeAttribute('hidden');
     return;
   }
+  const areaId=referenceArea();
+  if(areaId){
+    clearReferenceAreaState(app);
+    const target=document.getElementById(areaId);
+    document.querySelector('header')?.removeAttribute('hidden');
+    document.querySelector('footer')?.setAttribute('hidden','');
+    if(!target)return;
+    app.classList.add('reference-area-shell');
+    app.querySelectorAll(':scope > *').forEach(node=>{node.hidden=node!==target});
+    target.classList.add('reference-area-route');
+    if(!target.querySelector(':scope > .reference-back-home'))target.insertAdjacentHTML('afterbegin','<a class="reference-back-home" href="#inicio">Voltar para a teia</a>');
+    return;
+  }
+  clearReferenceAreaState(app);
+  document.querySelector('header')?.removeAttribute('hidden');
+  document.querySelector('footer')?.removeAttribute('hidden');
+  if(!referenceHome())return;
   document.querySelector('header')?.setAttribute('hidden','');
   document.querySelector('footer')?.setAttribute('hidden','');
   app.querySelectorAll(':scope > *').forEach(node=>{node.hidden=node!==hero});
